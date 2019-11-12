@@ -33,15 +33,19 @@ class CloseableQWidget(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.loop_stopper = None
 
     def keyPressEvent(self, e):
         if e.key() in [ Qt.Key_Escape, Qt.Key_Q ]:
             self.close()
+    def closeEvent(self, e):
+        if self.loop_stopper is not None:
+            self.loop_stopper.set()
 
 class Pomodoro():
 
     def __init__(self):
-        self.timer = 150
+        self.timer = 0
         self.progress_value = 0
         self.running = False
         self.cycles = 0
@@ -84,6 +88,7 @@ class Pomodoro():
 
     def run(self):
         self.loop_stopper = threading.Event()
+        self.window.loop_stopper = self.loop_stopper
         self.loop = threading.Thread(target=self.clock_loop, args=(self.loop_stopper,))
         self.loop.start()
 
@@ -198,3 +203,5 @@ class Pomodoro():
 
 if __name__ == '__main__':
     Pomodoro().exec()
+    print('exits')
+
