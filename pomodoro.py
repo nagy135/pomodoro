@@ -1,3 +1,4 @@
+import sys
 import time
 import threading
 
@@ -18,20 +19,29 @@ class STATE():
     PAUSE = 2
 
 CYCLE_LENGTHS = {
-        # STATE.WORK: 25*60,
-        # STATE.PAUSE: 5*60,
-        STATE.WORK: 15,
-        STATE.PAUSE: 5,
+        STATE.WORK: 25*60,
+        STATE.PAUSE: 5*60,
+        # STATE.WORK: 15,
+        # STATE.PAUSE: 5,
         }
 STATE_LABELS = {
         STATE.WORK: 'Work',
         STATE.PAUSE: 'Break',
         }
 
+class CloseableQWidget(QWidget):
+
+    def __init__(self):
+        super().__init__()
+
+    def keyPressEvent(self, e):
+        if e.key() in [ Qt.Key_Escape, Qt.Key_Q ]:
+            self.close()
+
 class Pomodoro():
 
     def __init__(self):
-        self.timer = 0
+        self.timer = 150
         self.progress_value = 0
         self.running = False
         self.cycles = 0
@@ -147,7 +157,7 @@ class Pomodoro():
         self.progress.setMinimum(0)
         self.progress.setValue(0)
 
-        self.window = QWidget()
+        self.window = CloseableQWidget()
         self.window.setGeometry(770, 440, 400, 200)
 
         self.outer_vertical = QVBoxLayout()
@@ -183,7 +193,7 @@ class Pomodoro():
         self.movie.loopCount()
 
         self.app.setStyle('Fusion')
-        self.app.exec_()
+        sys.exit(self.app.exec_())
 
 
 if __name__ == '__main__':
