@@ -36,7 +36,7 @@ class CloseableQWidget(QWidget):
         self.loop_stopper = None
 
     def keyPressEvent(self, e):
-        if e.key() in [ Qt.Key_Escape, Qt.Key_Q ]:
+        if e.key() == Qt.Key_Q:
             self.close()
     def closeEvent(self, e):
         if self.loop_stopper is not None:
@@ -93,8 +93,10 @@ class Pomodoro():
         self.loop.start()
 
     def change_progress_bar(self):
-        self.progress_value = int(self.timer / CYCLE_LENGTHS[self.state] * 100)
-        self.progress.setValue(self.progress_value)
+        new_progress_value = int(self.timer / CYCLE_LENGTHS[self.state] * 100)
+        if new_progress_value != self.progress_value:
+            self.progress_value = new_progress_value
+            self.progress.setValue(self.progress_value)
 
     def change_time_label(self):
         mins = self.timer // 60
