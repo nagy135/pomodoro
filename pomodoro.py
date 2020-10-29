@@ -31,13 +31,18 @@ STATE_LABELS = {
 
 class CloseableQWidget(QWidget):
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
         self.loop_stopper = None
+        self.parent = parent
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Q:
             self.close()
+        if e.key() == Qt.Key_P:
+            self.parent.toggle()
+        if e.key() == Qt.Key_R:
+            self.parent.reset()
     def closeEvent(self, e):
         if self.loop_stopper is not None:
             self.loop_stopper.set()
@@ -164,7 +169,7 @@ class Pomodoro():
         self.progress.setMinimum(0)
         self.progress.setValue(0)
 
-        self.window = CloseableQWidget()
+        self.window = CloseableQWidget(self)
         self.window.setGeometry(770, 440, 400, 200)
 
         self.outer_vertical = QVBoxLayout()
