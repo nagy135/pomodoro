@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/infiniter/Clones/pomodoro/
+python pomodoro.py
